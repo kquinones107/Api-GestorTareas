@@ -1,11 +1,14 @@
+// server.js
 require('dotenv').config();
-const { connectDB } = require('./config/db');
 const app = require('./app');
+const mongoose = require('mongoose');
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // Render inyecta PORT
+const MONGO_URI = process.env.MONGO_URI;
 
-connectDB(process.env.MONGO_URI).then(() => {
-  app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-  });
-});
+mongoose.connect(MONGO_URI)
+  .then(() => {
+    console.log('✅ Conectado a MongoDB');
+    app.listen(PORT, () => console.log(`🚀 Servidor en :${PORT}`));
+  })
+  .catch(err => console.error('❌ Mongo error:', err.message));
